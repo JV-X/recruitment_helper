@@ -4,7 +4,9 @@ from pyquery import PyQuery as pq
 
 from bosszhipin.config import config
 from bosszhipin.filter import work_filter
+from bosszhipin.filter_rule import rules
 from bosszhipin.model import Work
+from utils import log
 
 
 def time_from_div(div):
@@ -34,7 +36,7 @@ def company_from_div(div):
     return company
 
 
-def job_from_div(div):
+def title_from_div(div):
     e = pq(div)
     job = e(".job-title")[0].text
 
@@ -48,23 +50,24 @@ def url_from_div(div):
     return "https://www.zhipin.com{}".format(url)
 
 
-def work_from_div(div):
+def work_from_div(div, rule):
     w = Work()
 
-    w.job = job_from_div(div)
+    w.title = title_from_div(div)
     w.url = url_from_div(div)
     w.time = time_from_div(div)
     w.salary = salary_from_div(div)
     w.company = company_from_div(div)
+    w.rules = rule
 
     return w
 
 
-def works_from_response(r):
+def works_from_response(r, rule):
     e = pq(r.content)
     work_list = e(".job-primary")
 
-    return [work_from_div(e) for e in work_list]
+    return [work_from_div(e, rule) for e in work_list]
 
 
 def url_template():
@@ -90,16 +93,26 @@ def response_from_boss(kwd, page):
     }
 
     r = requests.get(template, query, headers=config["headers"])
-    print(r.url)
+    log(r.url)
     return r
 
 
-def do_query(key_word):
-    index = 1
+def has_next_page(r):
+    e = pq(r.content)
+    next_disable = e("[ka='page-next']").has_class("disabled")
 
-    while True:
-        response = response_from_boss(key_word, index)
-        works = works_from_response(response)
+    return not next_disable
+
+
+def do_query(rule):
+    index = 1
+    has_next = True
+
+    while has_next:
+        response = response_from_boss(rule.name, index)
+        works = works_from_response(response, rule)
+
+        has_next = has_next_page(response)
 
         work_filter.works.extend(works)
 
@@ -107,14 +120,20 @@ def do_query(key_word):
             work_filter.start()
 
             time.sleep(5)
-            print("\r--INDEX :{}--\r".format(index))
+            log("\r--INDEX :{}--\r".format(index))
             index = index + 1
         else:
-            print("\r--NO MORE， KEY :{}--\r".format(key_word))
+            log("\r--NO MORE， KEY :{}--\r".format(rule.name))
             return
 
 
 def start():
-    key_word = config["key_word"]
-    for kwd in key_word:
-        do_query(kwd)
+    for r in rules():
+        do_query(r)
+
+    log("\r————WAITING————\r")
+
+    while work_filter.working:
+        time.sleep(1)
+
+    log("\r————END————\r")
