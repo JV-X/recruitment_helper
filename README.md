@@ -4,7 +4,8 @@ a helper for use recruitment website
 HOW TO USE:
 
 1. create config.py in bosszhipin package
-config.py sample:
+## config.py sample:
+```
 config = {
     "city": "c101020100", # use code instead of city name, for example "c101020100" means ShangHai, use your city code instead
     "experience": "", # use code
@@ -29,3 +30,4 @@ config = {
         "upgrade-insecure-requests": "1",
     }
 }
+```
