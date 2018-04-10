@@ -16,7 +16,7 @@ def time_from_div(div):
     if t.startswith("发布于"):
         return t[3:]
     else:
-        return t  # TODO:逻辑可以做成可排序的格式
+        return t
 
 
 def salary_from_div(div):
@@ -55,7 +55,7 @@ def work_from_div(div, rule):
 
     w.title = title_from_div(div)
     w.url = url_from_div(div)
-    w.time = time_from_div(div)
+    w.simple_time = time_from_div(div)
     w.salary = salary_from_div(div)
     w.company = company_from_div(div)
     w.rules = rule
