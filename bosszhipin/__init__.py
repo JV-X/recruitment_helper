@@ -19,6 +19,15 @@ def time_from_div(div):
         return t
 
 
+def contact_from_div(div):
+    e = pq(div)
+    c = e(".info-publis").children().children()
+
+    begin = str(c).find("/>")
+    end = str(c).find("<em ")
+    return str(c)[begin + 2:end]
+
+
 def salary_from_div(div):
     e = pq(div)
     t = e(".red")[0].text
@@ -56,6 +65,7 @@ def work_from_div(div, rule):
     w.title = title_from_div(div)
     w.url = url_from_div(div)
     w.simple_time = time_from_div(div)
+    w.contact = contact_from_div(div)
     w.salary = salary_from_div(div)
     w.company = company_from_div(div)
     w.rules = rule
@@ -93,7 +103,7 @@ def response_from_boss(kwd, page):
     }
 
     r = requests.get(template, query, headers=config["headers"])
-    log(r.url)
+    log("request {}".format(r.url))
     return r
 
 

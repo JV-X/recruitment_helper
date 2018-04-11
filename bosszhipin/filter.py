@@ -40,7 +40,6 @@ class Filter:
     @staticmethod
     def valid(w):
         if Filter.message_too_old(w.simple_time):
-            print("too old")
             return False
 
         for rule in w.rules.filter_rule:
@@ -50,7 +49,6 @@ class Filter:
         time.sleep(3)
 
         r = requests.get(w.url, headers=config["headers"])
-        log(r.url)
         e = pq(r.content)
         t = e(".btn-startchat").text()
 
@@ -70,8 +68,7 @@ class Filter:
 
                 if Filter.valid(w):
                     self.valid_works.append(w)
-                    log("注意：{}".format(w))
-                    log("还有：{} 条".format(len(ws)))
+                    log(" 还有：{} 条  -> {}".format(len(ws), w))
                 else:
                     continue
             else:
