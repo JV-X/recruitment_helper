@@ -59,7 +59,4 @@ def rules():
         .append(Rule("python", common_rule))\
         .append(Rule("后端", common_rule))\
 
-    for r in rs:
-        for rule in r.rules:
-            print(rule)
     return rs
