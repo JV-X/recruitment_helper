@@ -17,31 +17,8 @@ class Filter:
         self.working = False
 
     @staticmethod
-    def message_too_old(st):
-        if len(st) != 6:
-            return False
-
-        today = date.today().timetuple()[1:3]
-
-        now_m = int(today[0])
-        pub_m = int(st[0:2])
-
-        now_d = int(today[1])
-        pub_d = int(st[3:5])
-
-        if now_m == pub_m and now_d - pub_d < 20:
-            return False
-        elif now_m == pub_m + 1 and (30 - pub_d + now_d) < 20:
-            return False
-        else:
-            return True
-
-    @staticmethod
     def valid(w):
-        if Filter.message_too_old(w.simple_time):
-            return False
-
-        for rule in w.rules.filter_rule:
+        for rule in w.rules.rules:
             if not rule(w):
                 return False
 
