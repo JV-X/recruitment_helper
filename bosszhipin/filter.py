@@ -1,5 +1,4 @@
 import _thread
-import threading
 from datetime import *
 
 import requests
@@ -59,20 +58,20 @@ class Filter:
 
     def _start(self):
         self.started = True
-
         ws = self.works
-        while True:
-            if len(ws) > 0:
-                self.working = True
-                w = ws.pop(0)
 
-                if Filter.valid(w):
-                    self.valid_works.append(w)
-                    log(" 还有：{} 条  -> {}".format(len(ws), w))
-                else:
-                    continue
-            else:
+        while True:
+            if len(ws) <= 0:
                 self.working = False
+                continue
+
+            self.working = True
+            w = ws.pop(0)
+
+            if Filter.valid(w):
+                self.valid_works.append(w)
+                log(" 还有：{} 条  -> {}".format(len(ws), w))
+            else:
                 continue
 
     def start(self):

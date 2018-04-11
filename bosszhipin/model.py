@@ -20,7 +20,7 @@ class Work:
         return r
 
     def early_than(self, other):
-        # format: "2018-04-10 08:04"
+        # format sample: "2018-04-10 08:04"
         t = Work.format_time(self.time)
         ot = Work.format_time(other.time)
 
