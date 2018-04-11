@@ -44,8 +44,6 @@ class Filter:
             log(" 还有：{} 条  -> {}".format(len(ws), w))
 
     def _start(self):
-        self.started = True
-
         while True:
             self.working = (len(self.works) <= 0)
 
@@ -54,7 +52,10 @@ class Filter:
 
     def start(self):
         if not self.started:
+            self.started = not self.started
             _thread.start_new_thread(self._start, ())
+        else:
+            return
 
 
 work_filter = Filter()

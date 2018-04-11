@@ -114,24 +114,23 @@ def has_next_page(r):
     return not next_disable
 
 
-def do_query(rule):
-    index = 1
+def process_rule(rule):
+    page_index = 1
     has_next = True
 
     while has_next:
-        response = response_from_boss(rule.name, index)
-        works = works_from_response(response, rule)
-
+        response = response_from_boss(rule.name, page_index)
         has_next = has_next_page(response)
 
+        works = works_from_response(response, rule)
         work_filter.works.extend(works)
 
         if len(works) > 0:
             work_filter.start()
 
-            time.sleep(5)
-            log("\r--INDEX :{}--\r".format(index))
-            index = index + 1
+            time.sleep(5)  # 降速防止封ip
+            log("\r--INDEX :{}--\r".format(page_index))
+            page_index = page_index + 1
         else:
             log("\r--NO MORE， KEY :{}--\r".format(rule.name))
             return
@@ -139,7 +138,7 @@ def do_query(rule):
 
 def start():
     for r in rules():
-        do_query(r)
+        process_rule(r)
 
     log("\r————WAITING————\r")
 

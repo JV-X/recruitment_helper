@@ -48,8 +48,10 @@ def common_rule(work):
 
 
 class RuleContainer(list):
+
     def append(self, p_object):
         super().append(p_object)
+
         return self
 
 
