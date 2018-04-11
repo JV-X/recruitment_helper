@@ -9,6 +9,26 @@ from bosszhipin import config
 from utils import log
 
 
+def pending(w):
+    time.sleep(3)  # 请求之前降速，避免同ip下请求太快
+
+    r = requests.get(w.url, headers=config["headers"])
+
+    e = pq(r.content)
+    t = e(".btn-startchat").text()
+    w.time = e(".time").text()[3:]
+
+    return t.startswith("立即沟通")
+
+
+def valid(w):
+    for rule in w.rules.rules:
+        if not rule(w):
+            return False
+
+    return True
+
+
 class Filter:
     def __init__(self):
         self.works = []
@@ -16,40 +36,21 @@ class Filter:
         self.started = False
         self.working = False
 
-    @staticmethod
-    def valid(w):
-        for rule in w.rules.rules:
-            if not rule(w):
-                return False
+    def do_work(self, ws):
+        w = ws.pop(0)
 
-        time.sleep(3)
-
-        r = requests.get(w.url, headers=config["headers"])
-        e = pq(r.content)
-        t = e(".btn-startchat").text()
-
-        w.time = e(".time").text()[3:]
-
-        v = t.startswith("立即沟通")
-        return v
+        if valid(w) and pending(w):
+            self.valid_works.append(w)
+            log(" 还有：{} 条  -> {}".format(len(ws), w))
 
     def _start(self):
         self.started = True
-        ws = self.works
 
         while True:
-            if len(ws) <= 0:
-                self.working = False
-                continue
+            self.working = (len(self.works) <= 0)
 
-            self.working = True
-            w = ws.pop(0)
-
-            if Filter.valid(w):
-                self.valid_works.append(w)
-                log(" 还有：{} 条  -> {}".format(len(ws), w))
-            else:
-                continue
+            if self.working:
+                self.do_work(self.works)
 
     def start(self):
         if not self.started:

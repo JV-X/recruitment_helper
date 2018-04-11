@@ -7,6 +7,7 @@ class Rule:
         self.rules = []
         self.rules.append(rule)
 
+
 def time_valid(work):
     if len(work.simple_time) != 6:
         return False
@@ -47,16 +48,15 @@ def common_rule(work):
 
 
 class RuleContainer(list):
-
     def append(self, p_object):
         super().append(p_object)
         return self
 
 
 def rules():
-    rs = RuleContainer()\
-        .append(Rule("web", common_rule))\
-        .append(Rule("python", common_rule))\
-        .append(Rule("后端", common_rule))\
+    rs = RuleContainer() \
+        .append(Rule("web", common_rule)) \
+        .append(Rule("python", common_rule)) \
+        .append(Rule("后端", common_rule))
 
     return rs
