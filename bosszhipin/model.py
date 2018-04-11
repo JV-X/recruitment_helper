@@ -22,7 +22,7 @@ class Work:
     def early_than(self, other):
         # format: "2018-04-10 08:04"
         t = Work.format_time(self.time)
-        ot = Work.format_time(other.time) # TODO 时间预处理
+        ot = Work.format_time(other.time)
 
         for index in range(len(t)):
             if int(t[index]) > int(ot[index]):
@@ -31,4 +31,4 @@ class Work:
         return 1
 
     def __repr__(self):
-        return "{} {} {} {} {} ".format(self.time, self.salary, self.company, self.title, self.url)
+        return "{} {} {} {} {} {} ".format(self.time, self.salary, self.contact, self.company, self.title, self.url)
