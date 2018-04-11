@@ -2,13 +2,16 @@ from datetime import date
 
 
 class Rule:
-    def __init__(self, name, rule):
-        self.name = name
+    def __init__(self, kw, rule):
+        self.key_word = kw
         self.rules = []
         self.rules.append(rule)
 
 
 def time_valid(work):
+    """
+    该函数用来过滤掉发布超过20天的信息
+    """
     if len(work.simple_time) != 6:
         return False
 
@@ -18,15 +21,20 @@ def time_valid(work):
     now_d = int(today[1])
     pub_d = int(work.simple_time[3:5])
 
-    if now_m == pub_m and now_d - pub_d < 20:
-        return False
-    elif now_m == pub_m + 1 and (30 - pub_d + now_d) < 20:
-        return False
-    else:
-        return True
+    expired = 20  # 过期时间
+
+    return (now_m == pub_m and now_d - pub_d < expired) or \
+           (now_m == pub_m + 1 and (30 - pub_d + now_d) < expired)
 
 
 def filter_by_keyword(work):
+    """
+    通过一些关键字过滤招聘信息
+    :param work:
+    :return:
+    """
+
+    # title 中出现了以下关键字的信息会被过滤掉
     l = ["Java", "java",
          "Node", "node",
          "PHP", "php",
@@ -39,16 +47,16 @@ def filter_by_keyword(work):
         if k in work.title:
             return False
 
-    return l
+    return True
 
 
 def common_rule(work):
+    # 通用过滤规则
     return time_valid(work) \
            and filter_by_keyword(work)
 
 
 class RuleContainer(list):
-
     def append(self, p_object):
         super().append(p_object)
 

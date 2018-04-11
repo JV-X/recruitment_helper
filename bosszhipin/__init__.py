@@ -119,7 +119,7 @@ def process_rule(rule):
     has_next = True
 
     while has_next:
-        response = response_from_boss(rule.name, page_index)
+        response = response_from_boss(rule.key_word, page_index)
         has_next = has_next_page(response)
 
         works = works_from_response(response, rule)
@@ -132,7 +132,7 @@ def process_rule(rule):
             log("\r--INDEX :{}--\r".format(page_index))
             page_index = page_index + 1
         else:
-            log("\r--NO MORE， KEY :{}--\r".format(rule.name))
+            log("\r--NO MORE， KEY :{}--\r".format(rule.key_word))
             return
 
 
