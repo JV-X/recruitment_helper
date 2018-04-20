@@ -45,7 +45,7 @@ class Filter:
 
     def _start(self):
         while True:
-            self.working = (len(self.works) <= 0)
+            self.working = (len(self.works) > 0)
 
             if self.working:
                 self.do_work(self.works)

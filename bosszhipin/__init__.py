@@ -32,7 +32,7 @@ def salary_from_div(div):
     e = pq(div)
     t = e(".red")[0].text
 
-    s = t.replace("K", "000").split("-")
+    s = t.replace("K", "000").replace("k", "000").split("-")
     s = tuple((int(n) for n in s))
 
     return s

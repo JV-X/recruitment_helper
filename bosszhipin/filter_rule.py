@@ -35,12 +35,12 @@ def filter_by_keyword(work):
     """
 
     # title 中出现了以下关键字的信息会被过滤掉
-    l = ["Java", "java",
+    l = ["Java", "java", "JAVA",
+         "前端", "H5", "h5",
          "Node", "node",
          "PHP", "php",
          "C++", "C",
-         "课程", "老师",
-         "前端", "H5", "h5",
+         "课程", "老师","讲师",
          ]
 
     for k in l:
@@ -57,6 +57,7 @@ def common_rule(work):
 
 
 class RuleContainer(list):
+
     def append(self, p_object):
         super().append(p_object)
 
@@ -65,8 +66,6 @@ class RuleContainer(list):
 
 def rules():
     rs = RuleContainer() \
-        .append(Rule("web", common_rule)) \
-        .append(Rule("python", common_rule)) \
-        .append(Rule("后端", common_rule))
+        .append(Rule("python后端", common_rule)) \
 
     return rs
