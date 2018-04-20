@@ -7,6 +7,7 @@ class Work:
         self.time = ""
         self.simple_time = ""
         self.contact = ""
+        self.detail = ""
         self.rules = None
 
     @staticmethod

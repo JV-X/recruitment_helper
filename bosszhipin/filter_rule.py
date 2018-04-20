@@ -27,9 +27,9 @@ def time_valid(work):
            (now_m == pub_m + 1 and (30 - pub_d + now_d) < expired)
 
 
-def filter_by_keyword(work):
+def filter_keyword_in_title(work):
     """
-    通过一些关键字过滤招聘信息
+    通过一些标题里的关键字过滤招聘信息
     :param work:
     :return:
     """
@@ -40,7 +40,7 @@ def filter_by_keyword(work):
          "Node", "node",
          "PHP", "php",
          "C++", "C",
-         "课程", "老师","讲师",
+         "课程", "老师", "讲师",
          ]
 
     for k in l:
@@ -50,14 +50,23 @@ def filter_by_keyword(work):
     return True
 
 
+def filter_keyword_in_detail(work):
+    """
+    通过详情过滤招聘信息
+    :param work:
+    :return:
+    """
+    return True
+
+
 def common_rule(work):
     # 通用过滤规则
     return time_valid(work) \
-           and filter_by_keyword(work)
+           and filter_keyword_in_title(work) \
+           and filter_keyword_in_detail(work)
 
 
 class RuleContainer(list):
-
     def append(self, p_object):
         super().append(p_object)
 
@@ -66,6 +75,6 @@ class RuleContainer(list):
 
 def rules():
     rs = RuleContainer() \
-        .append(Rule("python后端", common_rule)) \
+        .append(Rule("python", common_rule))
 
     return rs

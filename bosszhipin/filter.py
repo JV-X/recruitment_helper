@@ -9,14 +9,27 @@ from bosszhipin import config
 from utils import log
 
 
+def detail_from_div(w, e):
+    e = e(".job-sec")
+    es = e(".text").children()
+
+    for br in es:
+        if br.tail is None:
+            continue
+        else:
+            w.detail += br.tail + "\n"
+
+
 def pending(w):
     time.sleep(3)  # 请求之前降速，避免同ip下请求太快
-
+    print(w.url)
     r = requests.get(w.url, headers=config["headers"])
 
     e = pq(r.content)
     t = e(".btn-startchat").text()
     w.time = e(".time").text()[3:]
+
+    detail_from_div(w, e)
 
     return t.startswith("立即沟通")
 
